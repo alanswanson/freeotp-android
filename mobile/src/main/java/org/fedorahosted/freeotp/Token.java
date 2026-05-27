@@ -370,11 +370,14 @@ public class Token {
         code |= (digest[off + 2] & 0xff) << 0x08;
         code |= (digest[off + 3] & 0xff);
 
+        // Steam reverses OTP code.
+        boolean reverse = mIssuer.equals("Steam");
+
         Code.Factory factory = Code.Factory.fromIssuer(mIssuer);
         if (mType == Type.TOTP) {
-            return factory.makeTotpCode(code, mDigits, getPeriod());
+            return factory.makeTotpCode(code, mDigits, getPeriod(), reverse);
         } else {
-            return factory.makeHotpCode(code, mDigits, getPeriod());
+            return factory.makeHotpCode(code, mDigits, getPeriod(), reverse);
         }
     }
 
